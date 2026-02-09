@@ -27,11 +27,14 @@ h1 {
     margin-bottom: 40px;
 }
 
-/* ⭐ THIS MAKES BUTTONS SIDE BY SIDE */
+/* container for both buttons */
 .buttons {
+    position: relative;
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 25px;
+    height: 90px;
+    align-items: center;
 }
 
 button {
@@ -46,11 +49,18 @@ button {
 #yesBtn {
     background: #2ecc71;
     color: white;
+    z-index: 2;
 }
 
 #noBtn {
     background: #ff4d4d;
     color: white;
+
+    /* allows it to run away */
+    position: absolute;
+    left: 60%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .message {
@@ -67,7 +77,7 @@ button {
 <div class="card">
     <h1>Will you be my Valentine? 💖</h1>
 
-    <div class="buttons">
+    <div class="buttons" id="btnArea">
         <button id="yesBtn">Yes 💕</button>
         <button id="noBtn">No 😢</button>
     </div>
@@ -78,15 +88,29 @@ button {
 <script>
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
+const area = document.getElementById("btnArea");
 const msg = document.getElementById("msg");
 
 let scale = 1;
 
+// red button runs away + green grows
 noBtn.addEventListener("click", () => {
     scale += 0.25;
     yesBtn.style.transform = `scale(${scale})`;
+
+    const areaRect = area.getBoundingClientRect();
+    const maxX = areaRect.width - noBtn.offsetWidth;
+    const maxY = areaRect.height - noBtn.offsetHeight;
+
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+    noBtn.style.transform = "none";
 });
 
+// yes clicked
 yesBtn.addEventListener("click", () => {
     msg.style.display = "block";
     noBtn.style.display = "none";
